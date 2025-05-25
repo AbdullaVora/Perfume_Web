@@ -152,13 +152,13 @@ const SideBar = ({ openSlide, closeSideBar }) => {
                 }}
             >
                 <div
-                    className="w-100 text-center my-5"
+                    className="w-100 text-center my-3"
                 >
                     <Image
-                        src="/images/Logo.webp"
+                        src="/images/logo.png"
                         alt="logo"
-                        width={200}
-                        height={80}
+                        width={150}
+                        height={150}
                         className="img-fluid"
                         style={{ maxWidth: '250px', objectFit: 'contain' }}
                     />

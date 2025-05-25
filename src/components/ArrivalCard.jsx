@@ -191,7 +191,7 @@ const ArrivalCard = ({ id, img, title, price, isCollection, iswish }) => {
     // </div>
 
     <div
-      className={`arrivalCard position-relative ${ iswish ? 'overflow-visible' : 'overflow-hidden' } px-2 mb-4 ${
+      className={`arrivalCard position-relative ${ iswish ? 'overflow-visible' : 'overflow-hidden' } px-2 pt-2 ${
         iswish ? "mx-2" : ""
       }`}
     >
@@ -200,12 +200,12 @@ const ArrivalCard = ({ id, img, title, price, isCollection, iswish }) => {
         onMouseEnter={handleHover}
         onMouseLeave={handleHover}
         onClick={onDetail}
-        style={{height: iswish ? '350px' : ''}}
+        style={{height: '300px'}}
       >
         <img
           src={img}
           alt="arrival-img"
-          style={{ width: "100%", height: "auto", objectFit: "cover" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
           className="img-fluid"
         />
       </div>

@@ -257,7 +257,7 @@ export default function Home() {
             {arrival.map((card, index) => (
               <div
                 key={index}
-                className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-3 p-1"
+                className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-3"
                 style={{ maxWidth: '250px' }}
               >
                 <ArrivalCard
@@ -386,7 +386,7 @@ export default function Home() {
             {Ourproduct.map((card, index) => (
               <div
                 key={index}
-                className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-3 p-1"
+                className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-3"
                 style={{ maxWidth: '250px' }}
               >
                 <ArrivalCard
@@ -549,7 +549,7 @@ export default function Home() {
               <div className="col-12 col-md-6 order-2 order-md-1">
                 <div className="img d-flex justify-content-center">
                   <Image
-                    src="/images/deal_.webp"
+                    src="/images/deal.png"
                     alt="deal"
                     className='img-fluid rounded'
                     width={600}

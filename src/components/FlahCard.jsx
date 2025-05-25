@@ -12,25 +12,22 @@ const FlahCard = ({ id, img, title, price }) => {
     return (
         <>
             <div
-                className="flashCard position-relative overflow-hidden px-2"
-                data-aos="zoom-in" data-aos-delay="150" style={{ width: '300px' }}
+                className="flashCard position-relative overflow-hidden px-2 w-[400px] h-[350px]"
+                data-aos="zoom-in" data-aos-delay="150"
                 onClick={() => handleDetail(id)}
             >
-                <div className="img w-100">
+                <div className="img" style={{ width: '100%', height: '350px'}}>
                     <img
                         src={img}
-                        width={700}
                         alt="Flash-Card-img"
-                        className="img-fluid"
+                        style={{objectFit: 'contain', objectPosition: 'center'}}
+                        className="img-fluid w-[100%] h-[100%]"
                     />
                 </div>
                 <div className="content mt-3 text-center">
                     <h6 className="fw-normal">{title}</h6>
                     <span>${price}.00</span>
                 </div>
-                {/* <button className="bg-transparent rounded-1 mx-auto w-100 py-2 mb-3 mt-2">
-                    Quick Add
-                </button> */}
                 <div className="sideIcons">
                     <div className="cart">
                         <HiOutlineShoppingCart size={14} />

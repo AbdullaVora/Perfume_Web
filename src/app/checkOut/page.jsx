@@ -570,137 +570,6 @@ const CheckoutPage = () => {
     return `${month}/${year}`;
   };
 
-  // Coupon application logic
-  //     const applyCoupon = () => {
-  //         if (!couponCode.trim()) {
-  //             // toast.error('Please enter a coupon code');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'Please Enter Coupon Code.',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         const coupon = couponsData.find(c =>
-  //             c.name.toLowerCase() === couponCode.trim().toLowerCase()
-  //         );
-
-  //         if (!coupon) {
-  //             // toast.error('Invalid coupon code');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'Invalid Coupon Code.',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         // Check coupon validity dates
-  //         const currentDate = new Date();
-  //         const [startDateStr, endDateStr] = coupon.dateDetail.split(' To ');
-  //         const startDate = new Date(startDateStr);
-  //         const endDate = new Date(endDateStr);
-
-  //         if (currentDate < startDate) {
-  //             // toast.error('This coupon is not valid yet');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'Coupon Code Not valid.',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         if (currentDate > endDate) {
-  //             // toast.error('This coupon has expired');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'Coupon Code Expired.',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         //check coupon validity time
-  //         const currentTime = new Date().getTime();
-  //         const [startTime, endTime] = coupon.timeDetail.split(' To ');
-  //         const startTimeInMs = new Date(startTime).getTime();
-  //         const endTimeInMs = new Date(endTime).getTime();
-
-  //         if (currentTime < startTimeInMs) {
-  //             // toast.error('This coupon is not valid yet');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'This coupon is not valid yet',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         if (currentTime > endTimeInMs) {
-  //             // toast.error('This coupon has expired');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'This coupon has expired',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //         // check coupon validate days
-  //         const currentDay = new Date().getDay();
-  //         const couponDays = coupon.daysActive.split(',').map(day => day.trim().toLowerCase());
-  //         const daysMap = {
-  //             'sunday': 0,
-  //             'monday': 1,
-  //             'tuesday': 2,
-  //             'wednesday': 3,
-  //             'thursday': 4,
-  //             'friday': 5,
-  //             'saturday': 6
-  //         };
-
-  //         const isValidDay = couponDays.some(day => daysMap[day] === currentDay);
-  //         if (!isValidDay) {
-  //             // toast.error('This coupon is not valid today');
-  //             Swal.fire({
-  //                 icon: 'error',
-  //                 text: 'This coupon is not valid today',
-  //                 timer: 2000,
-  //                 showConfirmButton: false
-  //             });
-  //             return;
-  //         }
-
-  //     if (subtotal < coupon.minAmount) {
-  //         // toast.error(`Minimum order amount of ${coupon.minAmount} required for this coupon`);
-  //         Swal.fire({
-  //             icon: 'error',
-  //             text: `Minimum order amount of ${coupon.minAmount} required for this coupon`,
-  //             timer: 2000,
-  //             showConfirmButton: false
-  //         });
-  //         return;
-  //     }
-
-  //     setAppliedCoupon(coupon);
-  //     // toast.success('Coupon applied successfully!');
-  //     Swal.fire({
-  //         icon: 'success',
-  //         text: 'Coupon Applied Successfully.',
-  //         timer: 2000,
-  //         showConfirmButton: false
-  //     });
-
-  // };
-
   const applyCoupon = () => {
     dispatch(fetchCoupons());
     if (!couponCode.trim()) {
@@ -712,23 +581,50 @@ const CheckoutPage = () => {
       });
       return;
     }
-    console.log(couponCode);
-    const coupon = couponsData.find(
-      (c) => c.name.trim().toLowerCase() === couponCode.trim().toLowerCase()
-    );
-    console.log(coupons);
+    const validateCoupon = (couponCode) => {
+      // First ensure couponsData exists and is an array
+      if (!couponsData || !Array.isArray(couponsData)) {
+        Swal.fire({
+          icon: "error",
+          text: "Coupon system unavailable. Please try again later.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return null;
+      }
 
-    console.log(coupon);
+      // Normalize the coupon code for comparison
+      const normalizedCode = couponCode
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
 
-    if (!coupon) {
-      Swal.fire({
-        icon: "error",
-        text: "Invalid Coupon Code.",
-        timer: 2000,
-        showConfirmButton: false,
+      // Find matching coupon with more flexible comparison
+      const coupon = couponsData.find((c) => {
+        const couponName = c.name.trim().toLowerCase().replace(/\s+/g, " ");
+        return couponName === normalizedCode;
       });
-      return;
-    }
+
+      console.log("Available coupons:", couponsData);
+      console.log("Searched for:", normalizedCode);
+      console.log("Found coupon:", coupon);
+
+      if (!coupon) {
+        Swal.fire({
+          icon: "error",
+          text: "Invalid Coupon Code.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return null;
+      }
+
+      return coupon;
+    };
+
+    // Usage:
+    const coupon = validateCoupon(couponCode);
+    if (!coupon) return; // Stop if invalid
 
     // Check if dateDetail exists before splitting
     if (!coupon.dateDetail) {
@@ -976,6 +872,8 @@ const CheckoutPage = () => {
 
   const calculateDiscount = () => {
     if (!appliedCoupon) return 0;
+
+    console.log(appliedCoupon);
 
     if (appliedCoupon.Type === "amount") {
       return Math.min(appliedCoupon.Value, subtotal); // Ensure discount doesn't exceed subtotal

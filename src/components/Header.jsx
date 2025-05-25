@@ -23,8 +23,8 @@ const Header = () => {
   const [categories, setCategories] = useState([]);
   const [cart, setCart] = useState([]);
   const [wish, setWish] = useState([]);
-//   const [filterCart, setfilterCart] = useState([]);
-//   const [filterWish, setfilterWish] = useState([]);
+  //   const [filterCart, setfilterCart] = useState([]);
+  //   const [filterWish, setfilterWish] = useState([]);
   // const [userId, setUserId] = useState('null')
 
   const dispatch = useDispatch();
@@ -59,8 +59,8 @@ const Header = () => {
       const filterCart = cartData.filter((data) => data.userId === userId);
       const filterWish = wishData.filter((data) => data.userId === userId);
 
-    //   setfilterCart(filterCartData);
-    //   setfilterWish(filterWishData);
+      //   setfilterCart(filterCartData);
+      //   setfilterWish(filterWishData);
 
       setCart(filterCart);
       setWish(filterWish);
@@ -103,9 +103,8 @@ const Header = () => {
       <CartBar openSlide={cartBar} closeSideBar={closeSideBar} />
       <SideNav openSlide={sideNav} closeSideBar={closeSideBar} />
       <div
-        className={`trans-bg vh-100 w-100 position-fixed top-0 start-0 ${
-          sideBar || sideNav || cartBar ? "d-block" : "d-none"
-        }`}
+        className={`trans-bg vh-100 w-100 position-fixed top-0 start-0 ${sideBar || sideNav || cartBar ? "d-block" : "d-none"
+          }`}
         onClick={() => {
           setSideBar(false);
           setCartBar(false);
@@ -115,15 +114,36 @@ const Header = () => {
       ></div>
       <div className="shadow-sm">
         <div className="container-lg">
-          <header className="p-3 d-flex align-items-center justify-content-between">
-            <div className="logo">
-              <img src="/images/Logo.webp" alt="logo" className="img-fluid" />
-            </div>
+          <header className="px-3 d-flex align-items-center justify-content-between">
+            <Link href="/">
+              <div className="logo d-flex align-items-center">
+                <img src="/images/logo.png" alt="logo" className="img-fluid" />
+              </div>
+            </Link>
+
             <nav className="d-md-flex d-none align-items-center">
               <Link href="/" className="px-2 py-2 px-lg-4 text-decoration-none">
                 Home
               </Link>
+              <Link
+                href="/collection"
+                className="px-2 py-2 px-lg-4 text-decoration-none"
+              >
+                Collection
+              </Link>
 
+              <Link
+                href="/Mens"
+                className="px-2 py-2 px-lg-4 text-decoration-none"
+              >
+                Mens
+              </Link>
+              <Link
+                href="/Womens"
+                className="px-2 py-2 px-lg-4 text-decoration-none"
+              >
+                Womens
+              </Link>
               {/* Collection Dropdown */}
               <div
                 className="position-relative"
@@ -131,10 +151,10 @@ const Header = () => {
                 onMouseLeave={() => setCollectionDropdown(false)}
               >
                 <Link
-                  href="/collection"
+                  href="/Fragnance"
                   className="text-decoration-none px-2 py-2 px-lg-4"
                 >
-                  Collection
+                  Fragnance
                 </Link>
                 {/* <div className="d-flex align-items-center cursor-pointer">
                                     <FaChevronDown className="ms-1" size={12} />
@@ -148,7 +168,7 @@ const Header = () => {
                     {categories.map((category) => (
                       <div key={category._id} className="dropdown-item-parent">
                         <Link
-                          href={`/collection?category=${encodeURIComponent(
+                          href={`/Fragnance?category=${encodeURIComponent(
                             category.name
                           )}`}
                           className="d-block px-3 py-2 text-decoration-none hover-bg-light"
@@ -161,7 +181,7 @@ const Header = () => {
                             {category.subcategories.map((subcategory) => (
                               <Link
                                 key={subcategory._id}
-                                href={`/collection?category=${encodeURIComponent(
+                                href={`/Fragnance?category=${encodeURIComponent(
                                   category.name
                                 )}&subcategory=${encodeURIComponent(
                                   subcategory.name
@@ -178,7 +198,6 @@ const Header = () => {
                   </div>
                 )}
               </div>
-
               <Link
                 href="/blog"
                 className="px-2 py-2 px-lg-4 text-decoration-none"

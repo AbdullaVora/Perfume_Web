@@ -92,7 +92,7 @@ const Footer = () => {
                         {/* First Column - Logo and Contact Info */}
                         <div className="col-12 col-md-6 col-lg-2 mb-4 mb-lg-0">
                             <div className="logo">
-                                <img src="/images/Logo.webp" alt="Logo" className='img-fluid' width={200} />
+                                <img src="/images/logo.png" alt="Logo" className='img-fluid' width={200} />
                             </div>
                             {footer.map((foot, index) => (
                                 <div key={index} className="location mt-3 d-flex align-items-center">

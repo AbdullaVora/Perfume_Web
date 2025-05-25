@@ -56,7 +56,7 @@ const OurProductBox = ({ id, img, title, Cwidth, price }) => {
             className="arrivalCard position-relative overflow-hidden mt-5"
             onMouseEnter={handleHover}
             onMouseLeave={handleHover}
-            style={{ width: Cwidth ? '100%' : '226px' }}
+            style={{ height: '300px' }}
             data-aos="zoom-in" data-aos-delay="150"
 
         >
@@ -65,6 +65,7 @@ const OurProductBox = ({ id, img, title, Cwidth, price }) => {
                     src={img}
                     alt="arrival-img"
                     className="img-fluid"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
             </div>
             <div className="content mt-3 mb-3 text-center">

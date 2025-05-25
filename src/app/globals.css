@@ -61,7 +61,7 @@ html {
 }
 
 .loader:before {
-  content: "FurStore..."
+  content: "HQ PERFUME..."
 }
 
 
@@ -92,13 +92,24 @@ html {
 
 
 .swal2-html-container {
-  font-size: 28px;  /* Change to your preferred size */
+  font-size: 28px;
+  /* Change to your preferred size */
   font-weight: bold;
 }
 
 /* ************************************ Universal Style End ********************************** */
 
 /* ************************************ Header Style Start ********************************** */
+.logo {
+  height: 90px;
+  /* adjust as needed */
+}
+
+.logo img {
+  max-height: 100%;
+  object-fit: contain;
+}
+
 nav a {
   font-family: var(--primary-font);
   color: var(--text-color-1);
