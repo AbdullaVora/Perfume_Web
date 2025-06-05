@@ -574,7 +574,7 @@
 "use client";
 
 import { RiStarSLine } from "react-icons/ri";
-import { FaRegClock } from "react-icons/fa6";
+import { FaPlay, FaRegClock } from "react-icons/fa6";
 import { FaShippingFast } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from 'react'
@@ -616,6 +616,14 @@ const ProductDetail = () => {
     const productImages = product.length > 0 ? [product[0].main, ...(product[0].images || [])] : [];
     const cartData = useSelector(state => state.addToCart.Cart);
     const { userId } = useSelector((state) => state.userData)
+
+    // Update the productImages array to include videos
+    const productMedia = product.length > 0 ? [
+        ...(product[0].main ? [{ url: product[0].main, type: 'image' }] : []),
+        ...(product[0].images || []).map(img => ({ url: img, type: 'image' })),
+        ...(product[0].videos || []).map(vid => ({ url: vid, type: 'video' }))
+    ] : [];
+
 
     // Check if product is in cart
     const isInCart = cartData.some(item =>
@@ -737,8 +745,8 @@ const ProductDetail = () => {
             <div className="productDetail py-5 border-bottom">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-6 col-md-12">
-                            {/* Main Swiper for large image display */}
+
+                        {/* <div className="col-lg-6 col-md-12">
                             <Swiper
                                 spaceBetween={10}
                                 autoplay={true}
@@ -754,7 +762,7 @@ const ProductDetail = () => {
                                 ))}
                             </Swiper>
 
-                            {/* Thumbnail Swiper */}
+                            
                             <Swiper
                                 onSwiper={setThumbsSwiper}
                                 spaceBetween={10}
@@ -771,6 +779,79 @@ const ProductDetail = () => {
                                             className="img-fluid cursor-pointer"
                                             style={{ objectFit: 'cover', height: '100%', width: '100%' }}
                                         />
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div> */}
+                        <div className="col-lg-6 col-md-12">
+                            {/* Main Swiper for large media display */}
+                            <Swiper
+                                spaceBetween={10}
+                                // autoplay={true}
+                                pagination={{ clickable: true }}
+                                thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                                modules={[Pagination, Thumbs]}
+                                className="product-main-swiper mb-3"
+                            >
+                                {productMedia.map((media, index) => (
+                                    <SwiperSlide key={index}>
+                                        {media.type === 'image' ? (
+                                            <img
+                                                src={media.url}
+                                                alt={`Product image ${index}`}
+                                                className="img-fluid cursor-pointer"
+                                                style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                                            />
+                                        ) : (
+                                            <div className="relative w-full h-full flex items-center justify-center">
+                                                <video
+                                                    autoPlay
+                                                    muted
+                                                    loop
+                                                    cclassName="img-fluid cursor-pointer"
+                                                    style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                                                >
+                                                    <source src={media.url} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                {/* <div className="absolute inset-0 flex items-center justify-center">
+                                                    <FaPlay className="text-white text-4xl" />
+                                                </div> */}
+                                            </div>
+                                        )}
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+
+                            {/* Thumbnail Swiper */}
+                            <Swiper
+                                onSwiper={setThumbsSwiper}
+                                spaceBetween={10}
+                                slidesPerView={4}
+                                watchSlidesProgress={true}
+                                modules={[Thumbs]}
+                                className="product-thumbs-swiper"
+                            >
+                                {productMedia.map((media, index) => (
+                                    <SwiperSlide key={index}>
+                                        {media.type === 'image' ? (
+                                            <img
+                                                src={media.url}
+                                                alt={`Thumbnail ${index}`}
+                                                className="img-fluid cursor-pointer"
+                                                style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                                            />
+                                        ) : (
+                                            <div className="relative w-full flex items-center justify-center">
+                                                <video className="img-fluid cursor-pointer"
+                                                    style={{ objectFit: 'cover', height: '100%', width: '100%' }}>
+                                                    <source src={media.url} type="video/mp4" />
+                                                </video>
+                                                {/* <div className="absolute inset-0 flex items-center justify-center">
+                                                    <FaPlay className="text-white text-xl" />
+                                                </div> */}
+                                            </div>
+                                        )}
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
@@ -932,81 +1013,81 @@ const ProductDetail = () => {
 
             {/* Add some basic styles for the Swiper */}
             <style jsx global>{`
-                .product-main-swiper {
-                    width: 100%;
-                    height: 70%;
-                    margin-bottom: 15px;
-                }
+                    .product-main-swiper {
+                        width: 100%;
+                        height: 70%;
+                        margin-bottom: 15px;
+                    }
 
-                .product-main-swiper .swiper-slide {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background: #f8f8f8;
-                }
+                    .product-main-swiper .swiper-slide {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background: #f8f8f8;
+                    }
 
-                .product-thumbs-swiper {
-                    width: 100%;
-                    height: 120px;
-                }
+                    .product-thumbs-swiper {
+                        width: 100%;
+                        height: 120px;
+                    }
 
-                .product-thumbs-swiper .swiper-slide {
-                    opacity: 0.4;
-                    cursor: pointer;
-                    border: 1px solid #ddd;
-                }
+                    .product-thumbs-swiper .swiper-slide {
+                        opacity: 0.4;
+                        cursor: pointer;
+                        border: 1px solid #ddd;
+                    }
 
-                .product-thumbs-swiper .swiper-slide-thumb-active {
-                    opacity: 1;
-                    border: 1px solid #ff6400;
-                }
+                    .product-thumbs-swiper .swiper-slide-thumb-active {
+                        opacity: 1;
+                        border: 1px solid #ff6400;
+                    }
 
-                .cursor-pointer {
-                    cursor: pointer;
-                }
-                
-                .tabs-container::-webkit-scrollbar {
-                    display: none;
-                }
-                
-                /* Quantity Controls Styles */
-                .quantity-controls button {
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .quantity-controls button:hover {
-                    background-color: #f1f1f1;
-                    border-radius: 4px;
-                }
-                
-                /* Responsive adjustments */
-                @media (max-width: 768px) {
-                    .nav-tabs {
-                        padding-bottom: 8px;
+                    .cursor-pointer {
+                        cursor: pointer;
                     }
                     
-                    .nav-link {
-                        padding: 8px 12px !important;
-                        font-size: 13px !important;
+                    .tabs-container::-webkit-scrollbar {
+                        display: none;
                     }
                     
-                    .tab-content {
-                        padding: 16px !important;
+                    /* Quantity Controls Styles */
+                    .quantity-controls button {
+                        cursor: pointer;
+                        transition: all 0.3s ease;
                     }
-                }
-                
-                @media (max-width: 576px) {
-                    .nav-link {
-                        padding: 6px 10px !important;
-                        margin: 0 4px !important;
+
+                    .quantity-controls button:hover {
+                        background-color: #f1f1f1;
+                        border-radius: 4px;
                     }
                     
-                    .quantity-controls {
-                        margin-bottom: 15px !important;
+                    /* Responsive adjustments */
+                    @media (max-width: 768px) {
+                        .nav-tabs {
+                            padding-bottom: 8px;
+                        }
+                        
+                        .nav-link {
+                            padding: 8px 12px !important;
+                            font-size: 13px !important;
+                        }
+                        
+                        .tab-content {
+                            padding: 16px !important;
+                        }
                     }
-                }
-            `}</style>
+                    
+                    @media (max-width: 576px) {
+                        .nav-link {
+                            padding: 6px 10px !important;
+                            margin: 0 4px !important;
+                        }
+                        
+                        .quantity-controls {
+                            margin-bottom: 15px !important;
+                        }
+                    }
+                `}</style>
         </>
     )
 }

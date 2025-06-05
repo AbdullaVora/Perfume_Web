@@ -5,6 +5,7 @@ import { FaRegUser, FaChevronDown } from "react-icons/fa";
 import { RiHeart2Line } from "react-icons/ri";
 import { MdMenuOpen } from "react-icons/md";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import { MdOutlineQrCodeScanner } from "react-icons/md";
 import SideBar from "./SideBar";
 import CartBar from "./CartBar";
 import { useDispatch, useSelector } from "react-redux";
@@ -218,6 +219,11 @@ const Header = () => {
               </Link>
             </nav>
             <div className="icons d-flex align-items-center">
+              <Link href="/QrScanner" className="text-decoration-none text-black">
+                <MdOutlineQrCodeScanner size={44}
+                  className="me-sm-2 me-1 rounded-3 px-2 iconHover"
+                />
+              </Link>
               <FaRegUser
                 size={38}
                 className="me-sm-2 me-1 rounded-3 px-2 iconHover"
