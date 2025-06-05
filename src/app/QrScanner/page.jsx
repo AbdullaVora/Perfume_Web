@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import axios from 'axios';
+import apiInstance from '@/api/instance';
 
 const DeliveryScanner = () => {
   const [scanResult, setScanResult] = useState(null);
@@ -54,11 +55,9 @@ const DeliveryScanner = () => {
         throw new Error('QR code does not contain order information');
       }
 
-      const response = await axios.post('/api/orders/update-status', {
-        orderId: orderData.orderId
-      });
+      const response = await apiInstance.put(`/api/dashboard/updateOrderStatus/${orderData.orderId}`, {orderStatus: "Complete"} );
 
-      if (response.data.success) {
+      if (response.status === 200) {
         setSuccess(true);
       } else {
         throw new Error(response.data.message || 'Failed to update order status');
