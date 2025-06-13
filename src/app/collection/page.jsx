@@ -178,7 +178,7 @@ const Collections = () => {
             }
             return prev;
         });
-        
+
     }, [data, selectedCategories, selectedSubcategories, selectedBrands, priceRange, sortBy, minPrice, maxPrice]);
 
     const getSortLabel = (value) => {
@@ -274,7 +274,8 @@ const Collections = () => {
 
     return (
         <>
-            {/* <Header /> */}
+            {/* SEO */}
+
             {/* Banner Section */}
             <div className="collection d-flex align-items-center justify-content-center">
                 <div className="title text-center">

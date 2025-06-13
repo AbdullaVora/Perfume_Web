@@ -30,8 +30,19 @@ import { fetchProducts as fetchHomeProducts } from '@/redux/slice/CollectionSlic
 import { fetchBanners, fetchProducts, fetchSliders } from '@/redux/slice/HomeSlice';
 import { getUserWishlist } from '@/redux/slice/wishSlice';
 import VideoBanner from '@/components/BannerVideo';
+import { generateMetadata, generateOrganizationSchema, staticPagesSEO } from '@/lib/SEO';
+import { metadata } from '@/components/SEO/SEO';
+
 
 export default function Home() {
+
+  // useEffect(() => {
+  //   metadata(staticPagesSEO.home, '/');
+  // },[])
+
+  const organizationSchema = generateOrganizationSchema()
+
+
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -171,8 +182,13 @@ export default function Home() {
 
 
   return (
+
     <>
-      {/* <Header /> */}
+      {/* SEO  */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
       {/* Banner Start */}
       {/* <div className="banner pb-5" data-aos="zoom-out" style={{ backgroundImage: banner[0]?.desktopImage ? `url(${banner[0]?.desktopImage})` : 'none' }}>
         <div className="contents">

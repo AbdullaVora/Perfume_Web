@@ -741,7 +741,8 @@ const ProductDetail = () => {
 
     return (
         <>
-            {/* <Header /> */}
+            {/* SEO */}
+            
             <div className="productDetail py-5 border-bottom">
                 <div className="container">
                     <div className="row">
