@@ -9,9 +9,28 @@ import apiInstance from '@/api/instance';
 import Swal from 'sweetalert2';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import Script from 'next/script';
 
 
 const ContactUs = () => {
+
+
+    const frontendUrl = process.env.NEXT_FRONTEND_URL;
+
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HQ PERFUME",
+        "url": `${frontendUrl}/contact`,
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-800-123-4567",
+            "contactType": "Customer Support",
+            "areaServed": "IND",
+            "availableLanguage": ["English"]
+        }
+    };
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -40,7 +59,7 @@ const ContactUs = () => {
             }));
         }
     };
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -86,6 +105,14 @@ const ContactUs = () => {
 
     return (
         <>
+            {/* SEO */}
+            <Script
+                id="organization-schema"
+                type="application/ld+json"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+            />
+
             {/* <Header /> */}
             <div className='contact pb-5 border-bottom'>
                 <div className="container">

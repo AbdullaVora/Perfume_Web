@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import LoadingWrapper from "@/components/Loader";
 import UserDataStore from "@/helper/UserDataStore";
+import logo from "../../public/images/logo.png"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +24,11 @@ export const metadata = {
   openGraph: {
     title: "HQ PERFUME",
     description: "Luxury perfumes curated for your senses.",
-    url: "https://yourdomain.com",
+    url: `${process.env.NEXT_FRONTEND_URL}`,
     siteName: "HQ PERFUME",
     images: [
       {
-        url: "/og-image.jpg",
+        url: '../../public/images/logo.png',
         width: 1200,
         height: 630,
       },
@@ -38,7 +39,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "HQ PERFUME",
     description: "Explore premium and long-lasting perfumes.",
-    images: ["/og-image.jpg"],
+    images: ["../../public/images/logo.png"],
   },
 };
 

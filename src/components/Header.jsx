@@ -145,6 +145,12 @@ const Header = () => {
               >
                 Womens
               </Link>
+              <Link
+                href="/Unisex"
+                className="px-2 py-2 px-lg-4 text-decoration-none"
+              >
+                Unisex
+              </Link>
               {/* Collection Dropdown */}
               <div
                 className="position-relative"
@@ -219,11 +225,11 @@ const Header = () => {
               </Link>
             </nav>
             <div className="icons d-flex align-items-center">
-              <Link href="/QrScanner" className="text-decoration-none text-black">
+              {/* <Link href="/QrScanner" className="text-decoration-none text-black">
                 <MdOutlineQrCodeScanner size={44}
                   className="me-sm-2 me-1 rounded-3 px-2 iconHover"
                 />
-              </Link>
+              </Link> */}
               <FaRegUser
                 size={38}
                 className="me-sm-2 me-1 rounded-3 px-2 iconHover"

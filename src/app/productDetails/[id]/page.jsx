@@ -593,8 +593,30 @@ import { addProductToCart } from "@/redux/slice/addToCartSlice";
 import { TiMinusOutline, TiPlusOutline } from "react-icons/ti";
 import { fetchProducts } from "@/redux/slice/HomeSlice";
 import Swal from "sweetalert2";
+import Script from "next/script";
 
 const ProductDetail = () => {
+
+
+    const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product?.metaTitle,
+        "image": [product?.main],
+        "description": product?.metaDescription,
+        "sku": product?.sku,
+        "brand": {
+            "@type": "Brand",
+            "name": "HQ PERFUME"
+        },
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "INR", // Correct currency code for Indian Rupee
+            "price": product?.price,
+            "availability": "https://schema.org/InStock"
+        }
+    };
+
     const [activeTab, setActiveTab] = useState('description');
     const [selectedVariants, setSelectedVariants] = useState({});
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -606,8 +628,6 @@ const ProductDetail = () => {
     const router = useRouter();
 
     useEffect(() => {
-        // const id = localStorage.getItem('userId');
-        // setUserId(id);
         dispatch(fetchProducts())
     }, [dispatch]);
 
@@ -742,7 +762,15 @@ const ProductDetail = () => {
     return (
         <>
             {/* SEO */}
-            
+            <Head>
+                <Script
+                    id="product-jsonld"
+                    type="application/ld+json"
+                    strategy="afterInteractive"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+                />
+            </Head>
+
             <div className="productDetail py-5 border-bottom">
                 <div className="container">
                     <div className="row">
@@ -913,7 +941,7 @@ const ProductDetail = () => {
                             {/* Quantity Controls */}
                             <div className="quantity-controls d-flex align-items-center mb-3">
                                 <span className="fw-bold me-3" style={{ fontSize: '16px' }}>Quantity:</span>
-                                <div className="d-flex align-items-center border border-3 rounded-3" style={{ width: '120px' }}>
+                                <div className="d-flex align-items-center border-3 rounded-3" style={{ width: '120px' }}>
                                     <button
                                         className="border-0 bg-transparent px-3 py-1 fw-bold"
                                         onClick={() => setQuantity(prev => Math.max(1, prev - 1))}

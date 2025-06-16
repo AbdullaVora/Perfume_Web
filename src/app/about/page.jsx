@@ -3,10 +3,45 @@
 import React from 'react'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header';
+import Script from 'next/script';
 
 const About = () => {
+    const frontendUrl = process.env.NEXT_FRONTEND_URL; // fallback
+
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HQ PERFUME",
+        "url": `${frontendUrl}/about`,
+        "logo": `${frontendUrl}/logo.png`,
+        "description": "HQ PERFUME is a luxury fragrance brand known for long-lasting, elegant scents.",
+        "sameAs": [
+            "https://www.instagram.com/yourbrand"
+        ],
+        "founder": {
+            "@type": "Person",
+            "name": "HQ PERFUME"
+        },
+        "foundingDate": "2025",
+        "location": {
+            "@type": "Place",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "SURAT",
+                "addressCountry": "IN"
+            }
+        }
+    };
     return (
         <>
+            {/* SEO */}
+            <Script
+                id="about-organization-schema"
+                type="application/ld+json"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+            />
+
             {/* <Header /> */}
             <div className="about">
                 <div className="container">

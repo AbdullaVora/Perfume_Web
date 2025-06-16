@@ -32,6 +32,7 @@ import { getUserWishlist } from '@/redux/slice/wishSlice';
 import VideoBanner from '@/components/BannerVideo';
 import { generateMetadata, generateOrganizationSchema, staticPagesSEO } from '@/lib/SEO';
 import { metadata } from '@/components/SEO/SEO';
+import Script from 'next/script';
 
 
 export default function Home() {
@@ -39,6 +40,20 @@ export default function Home() {
   // useEffect(() => {
   //   metadata(staticPagesSEO.home, '/');
   // },[])
+
+  const frontendUrl = process.env.NEXT_FRONTEND_URL;
+
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HQ PERFUME",
+    "url": frontendUrl,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${frontendUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
 
   const organizationSchema = generateOrganizationSchema()
 
@@ -185,6 +200,13 @@ export default function Home() {
 
     <>
       {/* SEO  */}
+      <Script
+        id="website-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+      />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
