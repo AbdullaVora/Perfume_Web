@@ -1999,7 +1999,7 @@ const CheckoutPage = () => {
         // If address exists, set the flag and ID
 
         // Populate address form with existing data
-          setFirstName(response.data.firstName || ''),
+        setFirstName(response.data.firstName || ''),
           setLastName(response.data.lastName || ''),
           setAddressLine1(response.data.addressLine1 || ''),
           setAddressLine2(response.data.addressLine2 || ''),
@@ -2214,85 +2214,180 @@ const CheckoutPage = () => {
     });
   };
 
-  // Create Razorpay order on backend
-  const createRazorpayOrder = async (orderData) => {
-    try {
-      const response = await apiInstance.post("/api/razorpay/create-order", {
-        amount: Math.round(total * 100), // Convert to paise
-        currency: "INR",
-        orderData
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error creating Razorpay order:", error);
-      throw error;
-    }
-  };
-
-  // Verify payment on backend
-  const verifyPayment = async (paymentData) => {
-    try {
-      const response = await apiInstance.post("/api/razorpay/verify-payment", paymentData);
-      return response.data;
-    } catch (error) {
-      console.error("Error verifying payment:", error);
-      throw error;
-    }
-  };
 
   // Handle Razorpay payment
+  // const handleRazorpayPayment = async (orderData) => {
+  //   try {
+  //     setIsProcessingPayment(true);
+
+  //     // 1. Create order in backend
+  //     const orderResponse = await apiInstance.post("/api/dashboard/addOrder", orderData);
+
+  //     if (!orderResponse.data.success || !orderResponse.data.razorpay) {
+  //       throw new Error("Failed to initialize payment");
+  //     }
+
+  //     // 2. Initialize Razorpay
+  //     const options = {
+  //       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  //       amount: orderResponse.data.razorpay.amount,
+  //       currency: orderResponse.data.razorpay.currency,
+  //       name: orderResponse.data.razorpay.name,
+  //       description: orderResponse.data.razorpay.description,
+  //       order_id: orderResponse.data.razorpay.orderId,
+  //       handler: async function (response) {
+  //         try {
+  //           // Verify we have all required fields
+  //           const requiredFields = [
+  //             'razorpay_payment_id',
+  //             'razorpay_order_id',
+  //             'razorpay_signature'
+  //           ];
+
+  //           const missingFields = requiredFields.filter(
+  //             field => !response[field]
+  //           );
+
+  //           if (missingFields.length > 0) {
+  //             throw new Error(
+  //               `Missing payment verification fields: ${missingFields.join(', ')}`
+  //             );
+  //           }
+
+  //           // Verify payment
+  //           const verification = await apiInstance.post(
+  //             "/api/dashboard/verify-payment",
+  //             {
+  //               ...response,
+  //               orderId: orderResponse.data.data._id
+  //             }
+  //           );
+
+  //           if (verification.data.success) {
+  //             // Success handling
+  //             setOrderPlaced(true);
+  //             // router.push(`/order-success/${orderResponse.data.data._id}`);
+  //             Swal.fire({
+  //               icon: "success",
+  //               text: "Payment successful! Order placed.",
+  //               timer: 2000,
+  //               showConfirmButton: false,
+  //             });
+  //             router.push("/myOrders");
+  //           } else {
+  //             throw new Error(
+  //               verification.data.message || "Payment verification failed"
+  //             );
+  //           }
+  //         } catch (error) {
+  //           console.error("Payment processing error:", error);
+  //           // Show error to user and allow retry
+  //         }
+  //       },
+  //       prefill: {
+  //         name: `${orderData.firstName} ${orderData.lastName}`,
+  //         email: orderData.email,
+  //         contact: orderData.mobile || ""
+  //       },
+  //       theme: {
+  //         color: "#3399cc"
+  //       }
+  //     };
+
+  //     // Add error handlers
+  //     const rzp = new window.Razorpay(options);
+
+  //     rzp.on('payment.failed', (response) => {
+  //       console.error("Payment failed:", response.error);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Payment Failed",
+  //         text: response.error.description || "Payment could not be completed",
+  //         confirmButtonText: "Try Again"
+  //       });
+  //     });
+
+  //     rzp.open();
+
+  //   } catch (error) {
+  //     console.error("Payment initialization error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Payment Error",
+  //       text: error.message,
+  //       confirmButtonText: "OK"
+  //     });
+  //   } finally {
+  //     setIsProcessingPayment(false);
+  //   }
+  // };
+
   const handleRazorpayPayment = async (orderData) => {
     try {
       setIsProcessingPayment(true);
 
-      // Load Razorpay script
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        Swal.fire({
-          icon: "error",
-          text: "Failed to load payment gateway. Please try again.",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        return;
+      if (!window.Razorpay) {
+        const scriptLoaded = await loadRazorpayScript();
+        if (!scriptLoaded) {
+          throw new Error("Failed to load Razorpay payment gateway");
+        }
       }
 
-      // Create order on backend
-      const orderResponse = await createRazorpayOrder(orderData);
 
+      // 1. Create order on backend
+      const orderResponse = await apiInstance.post("/api/dashboard/addOrder", orderData);
+
+      if (!orderResponse.data.success || !orderResponse.data.razorpay) {
+        throw new Error("Failed to initialize payment");
+      }
+
+      // 2. Initialize Razorpay payment
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Your Razorpay Key ID
-        amount: orderResponse.amount,
-        currency: orderResponse.currency,
-        name: "Your Store Name",
-        description: `Order #${orderData.orderCode}`,
-        order_id: orderResponse.id,
-        prefill: {
-          name: `${firstName} ${lastName}`,
-          email: email,
-          contact: "" // Add phone number if available
-        },
-        theme: {
-          color: "#3399cc"
-        },
-        handler: async (response) => {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderResponse.data.razorpay.amount,
+        currency: orderResponse.data.razorpay.currency,
+        name: orderResponse.data.razorpay.name,
+        description: orderResponse.data.razorpay.description,
+        order_id: orderResponse.data.razorpay.orderId,
+        handler: async function (response) {
           try {
-            // Verify payment on backend
-            const verificationData = {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              orderData: {
-                ...orderData,
-                razorpayOrderId: response.razorpay_order_id,
-                razorpayPaymentId: response.razorpay_payment_id
+            // Check required Razorpay response fields
+            const requiredFields = [
+              'razorpay_payment_id',
+              'razorpay_order_id',
+              'razorpay_signature'
+            ];
+
+            const missingFields = requiredFields.filter(
+              field => !response[field]
+            );
+
+            if (missingFields.length > 0) {
+              throw new Error(
+                `Missing payment verification fields: ${missingFields.join(', ')}`
+              );
+            }
+
+            // Show loading dialog while verifying payment
+            Swal.fire({
+              title: "Verifying payment...",
+              text: "Please wait while we confirm your transaction.",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
               }
-            };
+            });
 
-            const verificationResponse = await verifyPayment(verificationData);
+            // Verify payment on backend
+            const verification = await apiInstance.post(
+              "/api/dashboard/verify-payment",
+              {
+                ...response,
+                orderId: orderResponse.data.data._id
+              }
+            );
 
-            if (verificationResponse.success) {
-              setOrderPlaced(true);
+            if (verification.data.success) {
               Swal.fire({
                 icon: "success",
                 text: "Payment successful! Order placed.",
@@ -2300,51 +2395,58 @@ const CheckoutPage = () => {
                 showConfirmButton: false,
               });
 
-              // Redirect to success page or home
-              setTimeout(() => {
-                router.push("/");
-              }, 2000);
+              setOrderPlaced(true);
+              router.push("/myOrders");
             } else {
-              throw new Error("Payment verification failed");
+              throw new Error(verification.data.message || "Payment verification failed");
             }
           } catch (error) {
             console.error("Payment verification error:", error);
             Swal.fire({
               icon: "error",
-              text: "Payment verification failed. Please contact support.",
-              timer: 3000,
-              showConfirmButton: false,
+              title: "Verification Failed",
+              text: error.message || "Could not verify payment. Please try again.",
+              confirmButtonText: "Retry"
             });
           }
         },
-        modal: {
-          ondismiss: () => {
-            setIsProcessingPayment(false);
-            Swal.fire({
-              icon: "warning",
-              text: "Payment cancelled. You can try again.",
-              timer: 2000,
-              showConfirmButton: false,
-            });
-          }
+        prefill: {
+          name: `${orderData.firstName} ${orderData.lastName}`,
+          email: orderData.email,
+          contact: orderData.mobile || ""
+        },
+        theme: {
+          color: "#3399cc"
         }
       };
 
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+      // Handle payment failure
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', (response) => {
+        console.error("Payment failed:", response.error);
+        Swal.fire({
+          icon: "error",
+          title: "Payment Failed",
+          text: response.error.description || "Payment could not be completed",
+          confirmButtonText: "Try Again"
+        });
+      });
+
+      rzp.open();
 
     } catch (error) {
-      console.error("Razorpay payment error:", error);
+      console.error("Payment initialization error:", error);
       Swal.fire({
         icon: "error",
-        text: error.response?.data?.message || "Payment failed. Please try again.",
-        timer: 3000,
-        showConfirmButton: false,
+        title: "Payment Error",
+        text: error.message || "Something went wrong while initializing the payment.",
+        confirmButtonText: "OK"
       });
     } finally {
       setIsProcessingPayment(false);
     }
   };
+
 
   // Handle Cash on Delivery
   const handleCashOnDelivery = async (orderData) => {
@@ -2352,7 +2454,7 @@ const CheckoutPage = () => {
       setIsProcessingPayment(true);
 
       // Here you would typically send the order to your backend
-      const response = await apiInstance.post("/api/orders/create", {
+      const response = await apiInstance.post("/api/dashboard/addOrder", {
         ...orderData,
         paymentStatus: "pending",
         orderStatus: "processing"
